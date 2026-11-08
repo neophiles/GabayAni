@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+import os
 from sqlmodel import select
 from sqlalchemy.orm import joinedload
 from app.database import create_db_and_tables, SessionDep
@@ -8,6 +10,16 @@ from app.optimizer import generate_crop_optimization
 from app.lookup_tables import CROP_NPK_TARGETS
 
 app = FastAPI()
+
+allowed_origin = os.getenv("FRONTEND_URL", "http://localhost:5173")
+
+app.add_middleware(
+  CORSMiddleware,
+  allow_origins=[allowed_origin],
+  allow_credentials=True,
+  allow_methods=["*"],
+  allow_headers=["*"],
+)
 
 @app.on_event("startup")
 def on_startup():
