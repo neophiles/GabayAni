@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "../constants";
 import type { NutrientLevel } from "../data/soil";
 
 export interface PredictionRequest {
@@ -39,7 +40,7 @@ export interface PredictionResponse {
 }
 
 export const fetchPrediction = async (payload: PredictionRequest): Promise<PredictionResponse> => {
-  const response = await fetch(`/api/predict`, {
+  const response = await fetch(`${API_BASE_URL}/predict`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
