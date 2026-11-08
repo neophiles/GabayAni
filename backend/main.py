@@ -57,13 +57,16 @@ def predict(input_data: PredictionRequest, session: SessionDep) -> InputRead:
   predicted_crop_label = predict_crop(input)
 
   if input_data.nitrogen_level is not None:
-    targets = CROP_NPK_TARGETS[predicted_crop_label.lower()]
-    level_factors = {"Low": 0.25, "Medium": 0.5, "High": 1.0}
-    input.nitrogen = targets["N"] * level_factors[input_data.nitrogen_level]
-    input.phosphorus = targets["P"] * level_factors[input_data.phosphorus_level]
-    input.potassium = targets["K"] * level_factors[input_data.potassium_level]
-
-  output_metrics = generate_crop_optimization(input, predicted_crop_label)
+    stk_levels = {
+        "N": input_data.nitrogen_level,
+        "P": input_data.phosphorus_level,
+        "K": input_data.potassium_level
+    }
+    output_metrics = generate_crop_optimization(input, predicted_crop_label, stk_levels)
+  else:
+    # Fallback if tested without STK levels in Swagger UI
+    fallback_stk = {"N": "Medium", "P": "Medium", "K": "Medium"}
+    output_metrics = generate_crop_optimization(input, predicted_crop_label, fallback_stk)
 
   input.output = output_metrics
   session.add(input)

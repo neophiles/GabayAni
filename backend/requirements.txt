@@ -4,3 +4,5 @@ asyncpg
 alembic
 model
 scipy
+joblib
+scikit-learn
