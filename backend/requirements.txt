@@ -6,3 +6,4 @@ model
 scipy
 joblib
 scikit-learn
+uvicorn

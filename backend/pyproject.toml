@@ -15,6 +15,7 @@ dependencies = [
     "scikit-learn>=1.9.1",
     "scipy>=1.18.1",
     "sqlmodel>=0.0.42",
+    "uvicorn>=0.53.0",
 ]
 
 [tool.uv.sources]
