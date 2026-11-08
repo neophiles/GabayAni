@@ -13,8 +13,11 @@ const MAX_PHONE_SCREEN_WIDTH = 426
 
 const OPEN_METEO_BASE_URL = "https://api.open-meteo.com/v1/forecast"
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'
+
 export {
   INITIAL_INPUTS,
   MAX_PHONE_SCREEN_WIDTH,
   OPEN_METEO_BASE_URL,
+  API_BASE_URL
 }
