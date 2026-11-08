@@ -43,7 +43,7 @@ export default function WeatherSection() {
           />
         </div>
         <Divider className="text-base-content-muted/25" />
-        <div className="w-full flex flex-col md:flex-row gap-4">
+        <div className="w-full flex flex-col md:flex-row md:justify-between gap-4">
           {!error
             ? (<div className="w-full flex justify-center text-center md:justify-start md:text-start gap-4">
                 <div className="flex-1 md:flex-none">
