@@ -2,7 +2,7 @@ from pathlib import Path
 import joblib
 from app.models import Input
 
-MODEL_PATH = Path(__file__).resolve().parents[2] / "model" / "random_forest.pkl"
+MODEL_PATH = Path(__file__).resolve().parent / "random_forest.pkl"
 MODEL = joblib.load(MODEL_PATH)
 
 def predict_crop(input_data: Input) -> str:
