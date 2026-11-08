@@ -1,13 +1,16 @@
-import type { ContainerProps } from "../../types/props";
+import { cn } from "cn";
+import type { Props } from "../../types/props";
 
 export default function Widget({
-  type: Component = "div",
   children,
-  className
-}: ContainerProps) {
+  className,
+}: Props) {
   return (
-    <Component className={`${className} w-full p-4 flex flex-col gap-4 border border-gray-300 rounded-lg`}>
+    <div className={cn(
+      "w-full p-4 md:p-6 gap-4 bg-base-100 rounded-lg shadow",
+      className,
+    )}>
       {children}
-    </Component>
+    </div>
   )
 }

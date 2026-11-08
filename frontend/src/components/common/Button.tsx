@@ -1,23 +1,24 @@
-import type { ButtonHTMLAttributes } from "react";
+import { cn } from "cn";
 import type { Props } from "../../types/props";
+import type { ButtonHTMLAttributes } from "react";
 
-type ButtonProps = Props & Pick<ButtonHTMLAttributes<HTMLButtonElement>, "aria-pressed" | "disabled" | "onClick" | "type">;
+export type ButtonProps = Props & ButtonHTMLAttributes<HTMLButtonElement>
 
 export default function Button({
   children,
   className,
-  "aria-pressed": ariaPressed,
-  disabled,
-  onClick,
-  type = "button"
+  ...buttonProps
 }: ButtonProps) {
   return (
     <button
-      type={type}
-      className={`${className} rounded px-2 py-1 text-sm md:text-base lg:text-lg cursor-pointer hover:brightness-50 ease-in-out duration-300`}
-      aria-pressed={ariaPressed}
-      disabled={disabled}
-      onClick={onClick}
+      type={buttonProps.type}
+      className={cn(
+        "cursor-pointer",
+        className,
+      )}
+      aria-pressed={buttonProps["aria-pressed"]}
+      disabled={buttonProps.disabled}
+      onClick={buttonProps.onClick}
     >
       {children}
     </button>
