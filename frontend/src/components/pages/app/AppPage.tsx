@@ -10,9 +10,8 @@ import useModal from "../../../stores/modal";
 import PrerequisiteModal from "./PrerequisiteModal";
 import useWeather from "../../../hooks/useWeather";
 import Spinner from "../../common/Spinner";
-import { fetchPrediction, type PredictionResponse } from "../../../api/predict";
+import { fetchPrediction } from "../../../api/predict";
 import type { NutrientLevel, NutrientType } from "../../../data/soil";
-import ResultSection from "./ResultSection";
 
 export default function AppPage() {
   const navigate = useNavigate();
@@ -28,7 +27,6 @@ export default function AppPage() {
   const [selectedPhOptionId, setSelectedPhOptionId] = useState<string | null>(null);
   const [farmArea, setFarmArea] = useState<number | "">("");
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false)
-  const [result, setResult] = useState<PredictionResponse | null>(null);
 
   const handleNutrientChange = (nutrient: NutrientType, level: NutrientLevel) => {
     setSelectedNutrients((prev) => ({
@@ -49,6 +47,7 @@ export default function AppPage() {
     }
     
     setIsAnalyzing(true)
+    navigate("/app/loading");
 
     try {
       const payload = {
@@ -63,15 +62,12 @@ export default function AppPage() {
       };
 
       const prediction = await fetchPrediction(payload);
-      setResult(prediction);
       navigate("/app/results", { state: { result: prediction } });
       console.log("Input:", payload);
-      console.log("Results:", result);
-
-      // TODO: Display results to user ;)))
       
     } catch (error) {
       console.error(error);
+      navigate("/app");
       alert("Prediction failed. Please try again.");
     } finally {
       setIsAnalyzing(false);
@@ -101,10 +97,6 @@ export default function AppPage() {
           : <Text size="lg">Analyze</Text>
         }
       </Button>
-      
-      {result && (
-        <ResultSection data={result} />
-      )}
     </Page>
   )
 }
