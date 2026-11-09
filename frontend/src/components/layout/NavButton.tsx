@@ -24,7 +24,9 @@ export default function NavButton({
   const location = useLocation()
   const { handleNavigate } = useAppNavigation()
   const currentPath = location.pathname
-  const isActive = currentPath == path || (currentPath === "/" && path === "/home")
+  const isActive = currentPath === path
+    || currentPath.startsWith(`${path}/`)
+    || (currentPath === "/" && path === "/home")
   const isBottom = placement === "bottom" ? "size-8" : ""
 
   const placementClasses: Record<NavButtonPlacement, string[]> = {

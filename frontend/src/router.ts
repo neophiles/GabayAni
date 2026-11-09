@@ -12,7 +12,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, Component: LandingPage },
       { path: "/app", Component: AppPage },
-      { path: "/results", Component: ResultsPage },
+      { path: "/app/results", Component: ResultsPage },
       { path: "/about", Component: AboutPage },
     ]
   }

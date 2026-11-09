@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import WeatherSection from "./WeatherSection";
 import Page from "../../common/Page";
 import SoilSection from "./SoilSection";
@@ -14,6 +15,7 @@ import type { NutrientLevel, NutrientType } from "../../../data/soil";
 import ResultSection from "./ResultSection";
 
 export default function AppPage() {
+  const navigate = useNavigate();
   const { isOpen } = useModal()
 
   const { weather } = useWeather()
@@ -62,6 +64,7 @@ export default function AppPage() {
 
       const prediction = await fetchPrediction(payload);
       setResult(prediction);
+      navigate("/app/results", { state: { result: prediction } });
       console.log("Input:", payload);
       console.log("Results:", result);
 
