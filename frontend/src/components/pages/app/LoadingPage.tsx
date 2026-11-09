@@ -10,12 +10,9 @@ export default function LoadingPage() {
 
   return (
     <Page className="min-h-[60vh] items-center justify-center text-center">
-      <Spinner />
-      <Text as="h1" size="2xl">
-        Analyzing your farm...
-      </Text>
-      <Text className="text-base-content-muted">
-        Please wait while we prepare your recommendations.
+      <Spinner className="size-16 text-[#D98308]" />
+      <Text as="h1" size="2xl" className="text-primary">
+        Analyzing...
       </Text>
     </Page>
   );

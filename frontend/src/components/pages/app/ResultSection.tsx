@@ -1,8 +1,13 @@
 import Section from "../../common/Section";
 import Text from "../../common/Text";
 import Widget from "../../common/Widget";
+import Button from "../../common/Button";
 import Divider from "../../layout/Divider";
 import type { PredictionResponse } from "../../../api/predict";
+import BagIcon from "../../../assets/icons/BagyIcon.svg";
+import DocumentIcon from "../../../assets/icons/DocIcon.svg";
+import LeafIcon from "../../../assets/icons/LeafIcon.png";
+import MagnifyIcon from "../../../assets/icons/MagnifyIcon.svg";
 
 interface ResultSectionProps {
   data: PredictionResponse;
@@ -14,69 +19,115 @@ export default function ResultSection({ data }: ResultSectionProps) {
   const formatPHP = (amount: number) =>
     new Intl.NumberFormat("en-PH", { style: "currency", currency: "PHP" }).format(amount)
 
+  const formatCropName = (crop: string) =>
+    crop.charAt(0).toUpperCase() + crop.slice(1)
+
+  const SummaryRow = ({ label, value }: { label: string; value: string }) => (
+    <div className="flex justify-between gap-4 text-sm">
+      <Text className="text-base-content-muted">{label}</Text>
+      <Text className="font-medium text-right">{value}</Text>
+    </div>
+  )
+
+  const PerformanceRow = ({ label, value }: { label: string; value: string }) => (
+    <div className="flex justify-between gap-4 text-sm">
+      <Text className="text-base-content-muted">{label}</Text>
+      <Text className="font-medium text-right text-success">{value}</Text>
+    </div>
+  )
+
   return (
     <Section>
-      <Text as="h2" size="xl">
-        Analysis Results
-      </Text>
-      
-      <Widget className="flex flex-col gap-6 bg-primary/20 border-primary/50">
-        <div className="text-center">
-          <Text size="sm" className="text-base-content-muted uppercase tracking-widest">
-            Recommended Crop
-          </Text>
-          <Text size="3xl" className="font-black text-primary capitalize mt-1">
-            {output.recommended_crop}
-          </Text>
+      <div className="flex flex-col items-center gap-2 text-center">
+        <img src={DocumentIcon} alt="Analysis complete" className="size-20" />
+        <Text as="h1" size="2xl" className="text-primary">
+          Analysis Results Complete!
+        </Text>
+      </div>
+
+      <Divider className="my-4 border-base-content/30" />
+
+      <Widget className="flex flex-col gap-3">
+        <div className="flex justify-between border-b border-base-300 pb-2">
+          <Text size="lg" className="font-bold text-primary">Parameters</Text>
+          <Text size="lg" className="font-bold text-primary">Value</Text>
         </div>
-
-        <Divider className="text-primary/10" />
-
-        <div className="flex flex-col gap-4">
-          <Text size="lg" className="font-bold">Fertilizer Plan</Text>
-          <div className="grid grid-cols-3 gap-3 text-center">
-            <div className="bg-base-100 p-3 rounded-lg shadow-sm border border-base-200">
-              <Text size="sm" className="text-base-content-muted">Urea</Text>
-              <Text size="xl" className="font-bold">{output.urea_kg_ha}</Text>
-              <Text size="sm">kg/ha</Text>
-            </div>
-            <div className="bg-base-100 p-3 rounded-lg shadow-sm border border-base-200">
-              <Text size="sm" className="text-base-content-muted">DAP</Text>
-              <Text size="xl" className="font-bold">{output.dap_kg_ha}</Text>
-              <Text size="sm">kg/ha</Text>
-            </div>
-            <div className="bg-base-100 p-3 rounded-lg shadow-sm border border-base-200">
-              <Text size="sm" className="text-base-content-muted">MOP</Text>
-              <Text size="xl" className="font-bold">{output.mop_kg_ha}</Text>
-              <Text size="sm">kg/ha</Text>
-            </div>
-          </div>
+        <div className="flex flex-col gap-1">
+          <SummaryRow label="Temperature:" value={`${data.temperature_c} °C`} />
+          <SummaryRow label="Precipitation:" value={`${data.rainfall_mm} mm`} />
+          <SummaryRow label="Humidity:" value={`${data.humidity_percent}%`} />
+          <SummaryRow label="Soil pH:" value={String(data.ph)} />
         </div>
-
-        <div className="flex flex-col gap-4">
-          <Text size="lg" className="font-bold">Financial Projections</Text>
-          <div className="flex flex-col gap-2 bg-base-100 p-4 rounded-lg shadow-sm border border-base-200">
-            <div className="flex justify-between items-center">
-              <Text>Estimated Yield:</Text>
-              <Text className="font-medium">{output.total_yield_mt} MT</Text>
-            </div>
-            <div className="flex justify-between items-center">
-              <Text>Fertilizer Cost:</Text>
-              <Text className="font-medium">-{formatPHP(output.total_cost_php)}</Text>
-            </div>
-            <div className="flex justify-between items-center">
-              <Text>Gross Revenue:</Text>
-              <Text className="font-medium">{formatPHP(output.gross_revenue_php)}</Text>
-            </div>
-            <Divider className="my-1" />
-            <div className="flex justify-between items-center">
-              <Text size="xl" className="font-bold">Net Profit:</Text>
-              <Text size="xl" className="font-black text-primary">{formatPHP(output.net_profit_php)}</Text>
-            </div>
-          </div>
-        </div>
-
       </Widget>
+
+      <Divider className="border-base-content/30" />
+
+      <Widget className="flex flex-col gap-3">
+        <Text size="lg" className="font-bold text-primary">
+          Financial Summary
+        </Text>
+        <div className="flex flex-col gap-1">
+          <SummaryRow label="Profit:" value={formatPHP(output.net_profit_php)} />
+          <SummaryRow label="Hectares:" value={`${data.area_ha} ha`} />
+        </div>
+      </Widget>
+
+      <Divider className="border-base-content/30" />
+
+      <Widget className="flex flex-col gap-3">
+        <Text size="lg" className="font-bold text-primary">
+          Crop Performance
+        </Text>
+        <div className="flex flex-col gap-1">
+          <PerformanceRow label="Crop Selection:" value={output.recommended_crop} />
+          <PerformanceRow
+            label="Fertilizer Mix:"
+            value={`${output.urea_kg_ha} kg urea, ${output.dap_kg_ha} kg DAP, ${output.mop_kg_ha} kg MOP`}
+          />
+          <PerformanceRow label="Soil Test:" value={`pH ${data.ph}`} />
+        </div>
+      </Widget>
+
+      <div className="flex flex-col gap-3">
+        <Text size="lg" className="font-bold text-primary">
+          Recommendations
+        </Text>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-4 rounded-xl border border-base-content/30 p-4">
+            <img src={LeafIcon} alt="Crop recommendation" className="size-8" />
+            <Text className="font-medium text-primary">
+              Crop Selection: {formatCropName(output.recommended_crop)}
+            </Text>
+          </div>
+          <div className="flex items-center gap-4 rounded-xl border border-base-content/30 p-4">
+            <img src={BagIcon} alt="Fertilizer recommendation" className="size-8" />
+            <Text className="font-medium text-primary">
+              Fertilizer Application: {output.urea_kg_ha} kg Urea, {output.dap_kg_ha} kg DAP, {output.mop_kg_ha} kg MOP
+            </Text>
+          </div>
+          <div className="flex items-center gap-4 rounded-xl border border-base-content/30 p-4">
+            <img src={MagnifyIcon} alt="Soil recommendation" className="size-8" />
+            <Text className="font-medium text-primary">
+              Soil Monitoring: Test nutrients and maintain pH {data.ph}
+            </Text>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <Button
+          type="button"
+          className="rounded-xl bg-[#D98308] px-4 py-3 font-bold text-white"
+        >
+          Download PDF
+        </Button>
+        <Button
+          type="button"
+          className="rounded-xl bg-[#D98308] px-4 py-3 font-bold text-white"
+        >
+          Share Link
+        </Button>
+      </div>
     </Section>
   )
 }
